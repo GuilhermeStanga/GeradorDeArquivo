@@ -52,6 +52,8 @@
     <Compile Include="GeradorTxt\ILeiauteStrategy.cs" />
     <Compile Include="GeradorTxt\Leiaute01Strategy.cs" />
     <Compile Include="GeradorTxt\LeiauteBaseStrategy.cs" />
+    <Compile Include="GeradorTxt\Leiaute02Strategy.cs" />
+    <Compile Include="GeradorTxt\LeiauteStrategyFactory.cs" />
     <Compile Include="GeradorTxt\MainConsole.cs" />
     <Compile Include="GeradorTxt\Models.cs" />
     <Compile Include="Program.cs" />

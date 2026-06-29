@@ -59,20 +59,29 @@ namespace GeradorDeArquivo.Tests
         }
 
         [Test]
-        public void Gerar_ComListaVazia_DeveCriarArquivoSemConteudoLogico()
+        public void Gerar_ComListaVazia_DeveGerarSomenteControles()
         {
             var sut = new GeradorArquivoBase();
             var outputPath = TestPaths.CreateTemporaryOutputFile();
 
             sut.Gerar(new List<Empresa>(), outputPath);
 
-            var conteudo = File.ReadAllText(outputPath);
+            var linhas = File.ReadAllLines(outputPath);
 
-            Assert.That(conteudo, Is.Empty);
+            CollectionAssert.AreEqual(
+                new[]
+                {
+                    "09|00|0",
+                    "09|01|0",
+                    "09|02|0",
+                    "09|03|0",
+                    "99|5"
+                },
+                linhas);
         }
 
         [Test]
-        public void Gerar_QuandoEmpresaNaoTemDocumentos_DeveGerarSomenteTipo00()
+        public void Gerar_QuandoEmpresaNaoTemDocumentos_DeveGerarTipo00EControles()
         {
             var sut = new GeradorArquivoBase();
             var outputPath = TestPaths.CreateTemporaryOutputFile();
@@ -94,13 +103,18 @@ namespace GeradorDeArquivo.Tests
             CollectionAssert.AreEqual(
                 new[]
                 {
-                    "00|12.345.678/0001-90|Empresa Sem Docs|(11) 99999-1111"
+                    "00|12.345.678/0001-90|Empresa Sem Docs|(11) 99999-1111",
+                    "09|00|1",
+                    "09|01|0",
+                    "09|02|0",
+                    "09|03|0",
+                    "99|6"
                 },
                 linhas);
         }
 
         [Test]
-        public void Gerar_QuandoDocumentoNaoTemItens_DeveGerarTipo00ETipo01()
+        public void Gerar_QuandoDocumentoNaoTemItens_DeveGerarTipo00ETipo01ComControles()
         {
             var sut = new GeradorArquivoBase();
             var outputPath = TestPaths.CreateTemporaryOutputFile();
@@ -132,7 +146,12 @@ namespace GeradorDeArquivo.Tests
                 new[]
                 {
                     "00|12.345.678/0001-90|Empresa Sem Itens|(11) 99999-1111",
-                    "01|NF|000123|10.00"
+                    "01|NF|000123|10.00",
+                    "09|00|1",
+                    "09|01|1",
+                    "09|02|0",
+                    "09|03|0",
+                    "99|7"
                 },
                 linhas);
         }
@@ -153,12 +172,20 @@ namespace GeradorDeArquivo.Tests
             Assert.That(linhasGeradas.Count(l => l.StartsWith("00|")), Is.EqualTo(empresas.Count));
             Assert.That(linhasGeradas.Count(l => l.StartsWith("01|")), Is.EqualTo(empresas.Sum(e => e.Documentos.Count)));
             Assert.That(linhasGeradas.Count(l => l.StartsWith("02|")), Is.EqualTo(empresas.Sum(e => e.Documentos.Sum(d => d.Itens.Count))));
+            Assert.That(linhasGeradas.Count(l => l.StartsWith("09|")), Is.EqualTo(4));
+            Assert.That(linhasGeradas.Last(), Does.StartWith("99|"));
         }
 
         private static IEnumerable<string> ConstruirLinhasEsperadas(IEnumerable<Empresa> empresas)
         {
+            var qtd00 = 0;
+            var qtd01 = 0;
+            var qtd02 = 0;
+            var qtd03 = 0;
+
             foreach (var empresa in empresas)
             {
+                qtd00++;
                 yield return string.Format(
                     CultureInfo.InvariantCulture,
                     "00|{0}|{1}|{2}",
@@ -166,8 +193,12 @@ namespace GeradorDeArquivo.Tests
                     empresa.Nome,
                     empresa.Telefone);
 
+                if (empresa.Documentos == null)
+                    continue;
+
                 foreach (var documento in empresa.Documentos)
                 {
+                    qtd01++;
                     yield return string.Format(
                         CultureInfo.InvariantCulture,
                         "01|{0}|{1}|{2:0.00}",
@@ -175,8 +206,12 @@ namespace GeradorDeArquivo.Tests
                         documento.Numero,
                         documento.Valor);
 
+                    if (documento.Itens == null)
+                        continue;
+
                     foreach (var item in documento.Itens)
                     {
+                        qtd02++;
                         yield return string.Format(
                             CultureInfo.InvariantCulture,
                             "02|{0}|{1:0.00}",
@@ -185,6 +220,14 @@ namespace GeradorDeArquivo.Tests
                     }
                 }
             }
+
+            var totalLinhas = qtd00 + qtd01 + qtd02 + qtd03 + 5;
+
+            yield return "09|00|" + qtd00.ToString(CultureInfo.InvariantCulture);
+            yield return "09|01|" + qtd01.ToString(CultureInfo.InvariantCulture);
+            yield return "09|02|" + qtd02.ToString(CultureInfo.InvariantCulture);
+            yield return "09|03|" + qtd03.ToString(CultureInfo.InvariantCulture);
+            yield return "99|" + totalLinhas.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

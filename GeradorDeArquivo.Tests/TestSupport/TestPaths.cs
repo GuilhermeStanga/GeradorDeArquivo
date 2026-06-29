@@ -21,6 +21,11 @@ namespace GeradorDeArquivo.Tests.TestSupport
             return Path.Combine(GetRepositoryRoot(), "GeradorDeArquivo", "data", "base-dados.json");
         }
 
+        public static string GetSourceJsonV2Path()
+        {
+            return Path.Combine(GetRepositoryRoot(), "GeradorDeArquivo", "data", "base-dados-v2.json");
+        }
+
         public static string CreateTemporaryOutputFile()
         {
             var directory = Path.Combine(Path.GetTempPath(), "GeradorDeArquivo.Tests", Guid.NewGuid().ToString("N"));

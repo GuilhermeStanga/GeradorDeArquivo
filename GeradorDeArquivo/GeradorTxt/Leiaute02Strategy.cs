@@ -2,11 +2,11 @@ using System.Text;
 
 namespace GeradorTxt
 {
-    public class Leiaute01Strategy : LeiauteBaseStrategy
+    public class Leiaute02Strategy : LeiauteBaseStrategy
     {
         public override string Codigo
         {
-            get { return "01"; }
+            get { return "02"; }
         }
 
         protected override bool EscreverTipo00(StringBuilder sb, Empresa empresa)
@@ -30,8 +30,17 @@ namespace GeradorTxt
         protected override bool EscreverTipo02(StringBuilder sb, ItemDocumento item)
         {
             sb.Append("02").Append("|")
+              .Append(item.NumeroItem).Append("|")
               .Append(item.Descricao).Append("|")
               .Append(ToMoney(item.Valor)).AppendLine();
+            return true;
+        }
+
+        protected override bool EscreverTipo03(StringBuilder sb, CategoriaItem categoria)
+        {
+            sb.Append("03").Append("|")
+              .Append(categoria.NumeroCategoria).Append("|")
+              .Append(categoria.DescricaoCategoria).AppendLine();
             return true;
         }
     }

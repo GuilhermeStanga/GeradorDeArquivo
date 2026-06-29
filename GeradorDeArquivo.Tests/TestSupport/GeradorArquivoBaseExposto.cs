@@ -27,6 +27,13 @@ namespace GeradorDeArquivo.Tests.TestSupport
             return sb.ToString();
         }
 
+        public string GerarLinhaTipo03(CategoriaItem categoria)
+        {
+            var sb = new StringBuilder();
+            EscreverTipo03(sb, categoria);
+            return sb.ToString();
+        }
+
         public string FormatarValor(decimal valor)
         {
             return ToMoney(valor);

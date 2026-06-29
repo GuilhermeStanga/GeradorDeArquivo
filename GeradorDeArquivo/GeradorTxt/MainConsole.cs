@@ -10,7 +10,6 @@ namespace GeradorTxt
     {
         private static string _jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "base-dados.json");
         private static string _outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "out");
-        private static readonly ILeiauteStrategy _strategy = new Leiaute01Strategy();
         private static readonly ArquivoGerador _arquivoGerador = new ArquivoGerador();
 
         public static void Run()
@@ -61,18 +60,30 @@ namespace GeradorTxt
                         break;
 
                     case "3":
-                        Console.WriteLine("Gerando arquivo...");
                         try
                         {
+                            Console.Write("Informe a versão do leiaute a ser gerado: ");
+                            var versaoTexto = Console.ReadLine();
+                            if (!int.TryParse(versaoTexto, out var versao))
+                            {
+                                Console.WriteLine("Versão inválida.");
+                                break;
+                            }
+
+                            var strategy = LeiauteStrategyFactory.Criar(versao);
                             var dados = JsonRepository.LoadEmpresas(_jsonPath);
 
-                            var fileName = $"saida_leiaute_versão {_strategy.Codigo}_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+                            var fileName = $"saida_leiaute_versão {versao:00}_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
 
                             var fullPath = Path.Combine(_outputDir, fileName);
 
-                            _arquivoGerador.Gerar(dados, fullPath, _strategy);
+                            _arquivoGerador.Gerar(dados, fullPath, strategy);
 
                             Console.WriteLine("Arquivo gerado em: " + fullPath);
+                        }
+                        catch (NotSupportedException ex)
+                        {
+                            Console.WriteLine(ex.Message);
                         }
                         catch (Exception ex)
                         {
