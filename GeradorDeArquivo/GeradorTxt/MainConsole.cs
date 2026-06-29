@@ -10,6 +10,8 @@ namespace GeradorTxt
     {
         private static string _jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "base-dados.json");
         private static string _outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "out");
+        private static readonly ILeiauteStrategy _strategy = new Leiaute01Strategy();
+        private static readonly ArquivoGerador _arquivoGerador = new ArquivoGerador();
 
         public static void Run()
         {
@@ -59,18 +61,16 @@ namespace GeradorTxt
                         break;
 
                     case "3":
-                        Console.Write("Gerar arquivo");
+                        Console.WriteLine("Gerando arquivo...");
                         try
                         {
-                            var gerador = new GeradorArquivoBase();
-
                             var dados = JsonRepository.LoadEmpresas(_jsonPath);
 
-                            var fileName = $"saida_leiaute_versão 01_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
+                            var fileName = $"saida_leiaute_versão {_strategy.Codigo}_{DateTime.Now:yyyyMMdd_HHmmss}.txt";
 
                             var fullPath = Path.Combine(_outputDir, fileName);
 
-                            gerador.Gerar(dados, fullPath);
+                            _arquivoGerador.Gerar(dados, fullPath, _strategy);
 
                             Console.WriteLine("Arquivo gerado em: " + fullPath);
                         }
