@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35931.197 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorDeArquivo", "GeradorDeArquivo\GeradorDeArquivo.csproj", "{C6F68B27-9122-461F-B519-71957D9FB3D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeradorDeArquivo.Tests", "GeradorDeArquivo.Tests\GeradorDeArquivo.Tests.csproj", "{E4C16A25-3F20-4F6A-8E0D-DB1C84F0C9B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C6F68B27-9122-461F-B519-71957D9FB3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F68B27-9122-461F-B519-71957D9FB3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F68B27-9122-461F-B519-71957D9FB3D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C16A25-3F20-4F6A-8E0D-DB1C84F0C9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C16A25-3F20-4F6A-8E0D-DB1C84F0C9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C16A25-3F20-4F6A-8E0D-DB1C84F0C9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C16A25-3F20-4F6A-8E0D-DB1C84F0C9B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
